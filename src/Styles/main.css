@@ -1,0 +1,51 @@
+body {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ height: 100vh;
+ margin: 0;
+ padding: 0;
+}
+
+.container {
+ display: flex;
+ align-items: center;
+ max-width: 400px;
+ margin: auto;
+}
+
+.btn {
+ padding: 8px;
+ background-color: #4285F4;
+ color: white;
+ border: none;
+ cursor: pointer;
+}
+
+input {
+ padding: 8px;
+ margin-right: 8px;
+ flex: 1;
+}
+
+ul {
+ display: flex;
+ flex-direction: column;
+ padding: 0;
+ margin: 4.375rem 0 0 0;
+ background-color: white;
+ width: 189px;
+ list-style-type: none;
+ position: absolute;
+ z-index: 1;
+}
+
+li {
+ padding: 8px;
+ cursor: pointer;
+ border: #4285F4;
+}
+
+li:hover {
+ background-color: #f1f1f1;
+}

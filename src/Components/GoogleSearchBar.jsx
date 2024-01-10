@@ -1,43 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const GoogleSearchBar = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+ const [searchTerm, setSearchTerm] = useState('');
+ const [searchHistory, setSearchHistory] = useState([]);
+ const [filteredSearchHistory, setFilteredSearchHistory] = useState([]);
 
-  const handleInputChange = (event) => {
+ useEffect(() => {
+    const savedSearchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
+    setSearchHistory(savedSearchHistory);
+ }, []);
+
+ useEffect(() => {
+    localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+ }, [searchHistory]);
+
+ const handleInputChange = (event) => {
     setSearchTerm(event.target.value);
-  };
+    setFilteredSearchHistory(searchHistory.filter(search => search.toLowerCase().includes(event.target.value.toLowerCase())));
+ };
 
-  const handleSearch = () => {
+ const handleSearch = () => {
     if (searchTerm.trim() !== '') {
+      setSearchHistory([...searchHistory, searchTerm]);
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchTerm)}`;
       window.open(searchUrl, '_blank');
+      setSearchTerm('');
+      setFilteredSearchHistory([]);
     }
-  };
+ };
 
-  const handleKeyPress = (event) => {
+ const handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       handleSearch();
     }
-  };
+ };
 
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', maxWidth: '400px', margin: 'auto' }}>
+ return (
+    <div className='container'>
       <input
         type="text"
         placeholder="Search Google"
         value={searchTerm}
         onChange={handleInputChange}
         onKeyDown={handleKeyPress}
-        style={{ padding: '8px', marginRight: '8px', flex: '1' }}
       />
-      <button
-        onClick={handleSearch}
-        style={{ padding: '8px', backgroundColor: '#4285F4', color: 'white', border: 'none', cursor: 'pointer' }}
-      >
-        Search
-      </button>
+      <button className='btn' onClick={handleSearch}>Search</button>
+      {filteredSearchHistory.length > 0 && (
+        <ul>
+          {filteredSearchHistory.map((search, index) => (
+            <li key={index}>{search}</li>
+          ))}
+        </ul>
+      )}
     </div>
-  );
+ );
 };
 
 export default GoogleSearchBar;
